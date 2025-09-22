@@ -4,12 +4,12 @@ import shutil
 from pathlib import Path
 import numpy as np
 
-FOLDER1 = Path("DATASET/RAW DATA")
-FOLDER2 = Path("DATASET/PROCESSED DATA")
+FOLDER1 = Path("DATASET/Camera/RAWDATA")
+FOLDER2 = Path("DATASET/Camera/PROCESSED DATA")
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".webp"}
 
 last_used_points = []
-selected_point_idx = -1  # GLOBAL
+selected_point_idx = -1
 
 def is_image_file(p: Path) -> bool:
     return p.suffix.lower() in IMAGE_EXTS
@@ -52,21 +52,29 @@ def purge_output_dir():
         shutil.rmtree(FOLDER2)
     FOLDER2.mkdir(parents=True, exist_ok=True)
 
-def get_user_points(img, max_width=1200, max_height=800):
+def get_user_points(img):
     global last_used_points, selected_point_idx
 
     h, w = img.shape[:2]
-    scale_x = max_width / w
-    scale_y = max_height / h
-    scale = min(scale_x, scale_y)
+    screen_res = (1920, 1080)
+    max_w, max_h = screen_res[0] - 100, screen_res[1] - 150  # margins
 
-    display_size = (int(w * scale), int(h * scale))
-    display_img = cv2.resize(img, display_size)
-    clicked_points = last_used_points.copy()
+    scale = 1.0
+    if h > max_h or w > max_w:
+        scale = min(max_w / w, max_h / h)
+
+    disp_w, disp_h = int(w * scale), int(h * scale)
+    display_img = cv2.resize(img, (disp_w, disp_h)) if scale != 1 else img.copy()
+
+    # Reset points if outside new image
+    clicked_points = []
+    for pt in last_used_points:
+        if 0 <= pt[0] < w and 0 <= pt[1] < h:
+            clicked_points.append(pt)
     selected_point_idx = -1
 
-    def inside(pt1, pt2, radius=20):
-        return np.linalg.norm(np.array(pt1) - np.array(pt2)) <= radius
+    def inside(p1, p2, r=20):
+        return np.linalg.norm(np.array(p1) - np.array(p2)) < r
 
     def mouse_callback(event, x, y, flags, param):
         global selected_point_idx
@@ -74,15 +82,13 @@ def get_user_points(img, max_width=1200, max_height=800):
 
         if event == cv2.EVENT_LBUTTONDOWN:
             for i, pt in enumerate(clicked_points):
-                if inside((x, y), (pt[0] * scale, pt[1] * scale)):
+                px, py = int(pt[0] * scale), int(pt[1] * scale)
+                if inside((x, y), (px, py)):
                     selected_point_idx = i
                     return
-
             if len(clicked_points) < 4:
-                orig_x = int(x / scale)
-                orig_y = int(y / scale)
-                clicked_points.append((orig_x, orig_y))
-                print(f"Point {len(clicked_points)}: ({orig_x}, {orig_y})")
+                clicked_points.append((int(x / scale), int(y / scale)))
+                print(f"Point {len(clicked_points)}: {clicked_points[-1]}")
 
         elif event == cv2.EVENT_MOUSEMOVE and selected_point_idx != -1:
             move_x = int(x / scale)
@@ -98,8 +104,8 @@ def get_user_points(img, max_width=1200, max_height=800):
     while True:
         preview = display_img.copy()
         for pt in clicked_points:
-            disp_pt = (int(pt[0] * scale), int(pt[1] * scale))
-            cv2.circle(preview, disp_pt, 15, (0, 0, 255), -1)
+            px, py = int(pt[0] * scale), int(pt[1] * scale)
+            cv2.circle(preview, (px, py), 15, (0, 0, 255), -1)
         cv2.imshow("Select 4 corners (Enter to preview, ESC to skip)", preview)
         key = cv2.waitKey(1) & 0xFF
 
@@ -135,7 +141,7 @@ def confirm_and_save(img, points, target_folder, stem, suffix):
 
         elif key == ord('b'):
             cv2.destroyWindow("Cropped Preview")
-            return None  # back to selection
+            return None
 
         elif key == 27:
             print("Skipped after crop.")
@@ -179,7 +185,7 @@ def process_all_images():
                     print("Redoing point selection...")
 
 if __name__ == "__main__":
-    print("[START] Interactive Crop with Draggable Points")
+    print("[START] Image Crop Tool — Ratio Fixed, Dots Adjustable, Safe Reuse]")
     if not FOLDER1.exists():
         raise FileNotFoundError(f"Source folder not found: {FOLDER1}")
     purge_output_dir()
