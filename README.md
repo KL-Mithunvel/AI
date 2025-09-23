@@ -91,7 +91,7 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 
 ```bash
 # Step 1: Clone the repo
-git clone https://github.com/yourusername/tile-quality-inspection-ai.git
+git clone https://github.com/KL-Mithunvel/AI.git
 cd tile-quality-inspection-ai
 
 # Step 2: Install dependencies
@@ -105,9 +105,10 @@ jupyter notebook notebooks/1_data_exploration.ipynb
 
 ## 👥 Contributors
 
+- Madumitha V
 - Mithunvel K L 
-- [Friend 1]
-- [Friend 2]
+- Kiran S
+- subbu something 
 
 ---
 
