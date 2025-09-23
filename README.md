@@ -32,7 +32,7 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 - `crop.py`: Crop the images as needed.
 - `prep_data.py`:  reformat the files as needed for robo studio.
 
----
+
 <!--
 ### `deployment/`
 > For Raspberry Pi or real-time testing setup.
@@ -62,7 +62,6 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 
 ✅ What to do: Keep all demo materials organized here.
 -->
----
 
 ### Root Files
 
