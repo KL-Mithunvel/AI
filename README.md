@@ -11,41 +11,29 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 ### `data/`
 > Where all your data lives.
 
-- `raw/`: Store unprocessed tile images here. You can create subfolders like `Type1/`, `Type2/`, etc.
+- `raw/`: Store unprocessed tile images here. You can create subfolders like `A/`, `B/`, etc.
 - `processed/`: Store resized, cleaned, or augmented data here after running preprocessing scripts.
 - `annotations/`: Label files for object detection or classification. Could be YOLO `.txt`, Pascal VOC `.xml`, or `.csv`.
 - `samples/`: A few example images for testing code quickly.
-
-✅ What to do: Collect tile images, label them, and organize them here.
 
 ---
 
 ### `notebooks/`
 > Jupyter notebooks for development, training, and testing.
 
-- `1_data_exploration.ipynb`: Visualize class distribution, check image sizes, etc.
-- `2_preprocessing.ipynb`: Resize, normalize, and augment your images.
-- `3_model_training.ipynb`: Train classification or detection model here.
-- `4_inference_tests.ipynb`: Test trained model on new images.
-
-✅ What to do: Use notebooks to explore and build your initial pipeline.
+- `CNN1.ipynb`: Visualize class distribution, check image sizes, etc.
 
 ---
 
 ### `src/`
 > Core source code (Python modules).
 
-- `dataset.py`: Functions to load and preprocess image data.
-- `model.py`: Define your CNN model here (e.g., MobileNet, ResNet).
-- `train.py`: Script to train model using `dataset.py` and `model.py`.
-- `evaluate.py`: Evaluate trained model, show confusion matrix or mAP.
-- `infer.py`: Run inference on a folder or image.
-- `utils.py`: Misc utilities like plotting, accuracy tracking, etc.
-
-✅ What to do: Write clean, reusable code here for training and inference.
+- `RawProcessingt.py`: Just to check the basic setting to check data.
+- `crop.py`: Crop the images as needed.
+- `prep_data.py`:  reformat the files as needed for robo studio.
 
 ---
-
+<!--
 ### `deployment/`
 > For Raspberry Pi or real-time testing setup.
 
@@ -54,7 +42,7 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 - `raspi_setup.md`: Instructions to run the project on Raspberry Pi.
 
 ✅ What to do: Use this when integrating with real hardware or testing in production.
-
+-->
 ---
 
 ### `reports/`
@@ -63,10 +51,8 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 - `DA_1.pdf`, `DA_2.pdf`, `DA_3.pdf`: Term paper deliverables.
 - `turnitin_certificates/`: Plagiarism reports for each submission.
 
-✅ What to do: Drop all final submission PDFs and certificates here.
-
 ---
-
+<!-- 
 ### `demo/`
 > Everything for your presentation/demo.
 
@@ -75,7 +61,7 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 - `screenshots/`: Output images showing defect detection.
 
 ✅ What to do: Keep all demo materials organized here.
-
+-->
 ---
 
 ### Root Files
@@ -92,13 +78,11 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 ```bash
 # Step 1: Clone the repo
 git clone https://github.com/KL-Mithunvel/AI.git
-cd tile-quality-inspection-ai
+cd root diractory
 
 # Step 2: Install dependencies
 pip install -r requirements.txt
 
-# Step 3: Run notebook to explore or train
-jupyter notebook notebooks/1_data_exploration.ipynb
 ```
 
 ---
