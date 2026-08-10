@@ -4,71 +4,51 @@ Artificial Intelligence course – BMEE407L Term Paper This project is part of t
 
 This repository is part of our BMEE407L Artificial Intelligence term project at VIT Chennai. Our goal is to build an AI-powered quality control system for tiles using computer vision techniques.
 
----
-
-## 📁 Project Structure & What to Do in Each Folder
-
-### `data/`
-> Where all your data lives.
-
-- `raw/`: Store unprocessed tile images here. You can create subfolders like `A/`, `B/`, etc.
-- `processed/`: Store resized, cleaned, or augmented data here after running preprocessing scripts.
-- `annotations/`: Label files for object detection or classification. Could be YOLO `.txt`, Pascal VOC `.xml`, or `.csv`.
-- `samples/`: A few example images for testing code quickly.
+> **Archived course prototype.** This is the older BMEE407L term-paper project.
+> It does **not** match the requirements of the newer
+> [`Tile_Sorting`](https://github.com/KL-Mithunvel/tile_sorting) automation
+> system, but the methods here (camera capture/crop pipeline, classical tile
+> segmentation, and the CNN grade classifier) are still reusable as a starting
+> point. See the detailed write-ups below.
 
 ---
 
-### `notebooks/`
-> Jupyter notebooks for development, training, and testing.
+## 📚 Detailed documentation
 
-- `CNN1.ipynb`: Visualize class distribution, check image sizes, etc.
+Full, code-accurate documentation of what was built and how it works:
 
----
-
-### `src/`
-> Core source code (Python modules).
-
-- `RawProcessingt.py`: Just to check the basic setting to check data.
-- `crop.py`: Crop the images as needed.
-- `prep_data.py`:  reformat the files as needed for robo studio.
-
-
-<!--
-### `deployment/`
-> For Raspberry Pi or real-time testing setup.
-
-- `camera_capture.py`: Captures images from Pi Camera or webcam.
-- `live_inference.py`: Runs model on live feed and shows prediction.
-- `raspi_setup.md`: Instructions to run the project on Raspberry Pi.
-
-✅ What to do: Use this when integrating with real hardware or testing in production.
--->
----
-
-### `reports/`
-> Formal documents for submission.
-
-- `DA_1.pdf`, `DA_2.pdf`, `DA_3.pdf`: Term paper deliverables.
-- `turnitin_certificates/`: Plagiarism reports for each submission.
+- **[`docs/METHODS.md`](docs/METHODS.md)** — the two tile-grading ("sorting")
+  methods developed here: the classical CV checkerboard/tile segmentation
+  (`RawProcessing.py`) and the CNN grade classifier (`CNN1.ipynb`), plus the
+  end-to-end data flow and an honest read of the results.
+- **[`docs/CAMERA_MODE.md`](docs/CAMERA_MODE.md)** — the interactive **camera
+  mode**: perspective-crop + 4-rotation augmentation tool (`crop.py`), its
+  operator workflow, image processing, and how it feeds the models.
 
 ---
-<!-- 
-### `demo/`
-> Everything for your presentation/demo.
 
-- `demo_script.md`: Script for your live or recorded demo.
-- `test_video.mp4`: Screen-recorded or camera-based demo clip.
-- `screenshots/`: Output images showing defect detection.
+## 📁 Actual repository structure
 
-✅ What to do: Keep all demo materials organized here.
--->
+```text
+AI/
+├── CNN1.ipynb               # Colab notebook: preprocessing + 4-class CNN grade classifier
+├── DATA PROCESSING/
+│   ├── RawProcessing.py     # Classical CV: checkerboard + tile segmentation (no ML)
+│   ├── crop.py              # "Camera mode": interactive perspective crop + rotation augmentation
+│   └── prep_data.py         # Rename/flatten processed images for Roboflow ("robo studio")
+├── DATASET/
+│   └── RAW DATA/            # Grade-labelled raw photos: G3A/, G3B/, G4/, G5/ (the 4 classes)
+├── DAs/                     # Digital Assignment / term-paper deliverables + reference paper
+├── docs/                    # Detailed documentation (see above)
+├── README.md
+└── LICENSE
+```
 
-### Root Files
-
-- `requirements.txt`: Python libraries required for the project.
-- `README.md`: This file – an overview and guide for contributors.
-- `.gitignore`: Tells Git which files/folders to ignore (like logs, weights).
-- `LICENSE`: Optional – add an open-source license if needed.
+> Only `DATASET/RAW DATA/` (the four G-grade folders) is tracked in git. The
+> working folders the scripts reference — `DATASET/Camera/…` (rig camera, used by
+> `crop.py`) and `DATASET/Phone/…` (phone photos, used by `prep_data.py`) — plus
+> the Drive-hosted `PROCESSED_DATA/` the notebook trains on, are local/Drive data
+> and are intentionally not committed.
 
 ---
 
@@ -77,12 +57,19 @@ This repository is part of our BMEE407L Artificial Intelligence term project at 
 ```bash
 # Step 1: Clone the repo
 git clone https://github.com/KL-Mithunvel/AI.git
-cd root diractory
+cd AI
 
-# Step 2: Install dependencies
-pip install -r requirements.txt
-
+# Step 2: Install the libraries the scripts need (there is no requirements.txt
+# in this archived repo — the data-processing scripts use OpenCV + NumPy):
+pip install opencv-python numpy
 ```
+
+- **`DATA PROCESSING/crop.py` / `RawProcessing.py`** run locally and need OpenCV
+  with GUI support (they open `cv2.imshow` windows). See
+  [`docs/CAMERA_MODE.md`](docs/CAMERA_MODE.md) for the camera-mode workflow.
+- **`CNN1.ipynb`** is a Google Colab notebook — open it in Colab (it mounts
+  Google Drive for the dataset and uses TensorFlow). See
+  [`docs/METHODS.md`](docs/METHODS.md) for the model details.
 
 ---
 
